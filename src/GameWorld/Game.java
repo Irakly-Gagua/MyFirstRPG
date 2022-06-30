@@ -4,13 +4,19 @@ import java.util.Scanner;
 
 public class Game {
     Hero hero;
+    boolean endOfGame = false;
 
     private Game() {
         createHero();
     }
 
     public static void start() {
-        new Game().inMainTown();
+        Scanner scanner;
+        do {
+            new Game().inMainTown();
+            message("\n\nХотите начать игру сначала? (y/n)");
+            scanner = new Scanner(System.in);
+        } while (scanner.nextLine().toLowerCase().startsWith("y"));
     }
 
     private void createHero() {
@@ -27,9 +33,9 @@ public class Game {
         message(name + ", вы наш новый герой!");
     }
 
-    void message(Object message) {
+    static void message(Object message) {
         try {
-            Thread.sleep(400);
+            Thread.sleep(600);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -37,28 +43,66 @@ public class Game {
     }
 
     private void inMainTown () {
-        message(hero.getName() + ", вы в главном городе");
-        hero.levelUp();
-        hero.levelUp();
-        message("Вы отравились вином из одуванчиков.");
-        heroIsDead();
+        while (!endOfGame) {
+            message(hero.getName() + ", вы в Главном Городе.");
+            message("Куда направитесь? Введите цифру 1, 2 или 3." +
+                    "\n1) В тёмный лес (бой с монстром)." +
+                    "\n2) К торговцу (купить зелья здоровья)." +
+                    "\n3) Покинуть игру.");
+            Scanner scanner = new Scanner(System.in);
+            String command = scanner.nextLine();
+            while (Command(command) == 0) {
+                message(hero.getName() + ", вас не слышно. Повторите " +
+                        "ввод цифры и нажмите Enter.");
+                command = scanner.nextLine();
+            }
+
+            switch (Command(command)) {
+                case 1 -> fight();
+                case 2 -> trade();
+                case 3 -> end();
+            }
+        }
+    }
+
+    private int Command(String s) {
+        if (s == null || s.length() < 1) return 0;
+        return switch (s.charAt(0)) {
+            case '1' -> 1;
+            case '2' -> 2;
+            case '3' -> 3;
+            default -> 0;
+        };
+    }
+
+    private void trade() {
+        //
+        inMainTown();
     }
 
     private void fight() {
-        //
+        Fight fight = new Fight(this);
+        Thread fighting = new Thread(fight);
+        message("В лесу на вас нападает " + fight.monster.getName() + "!");
+        message("Придётся сражаться! Кстати, вы запаслись лечебными зельями?");
+        message("Чтобы выпить зелье, введите h и нажмите Enter.");
+        fighting.start();
+        while (fighting.isAlive()) {
+            //
+        }
+        if (hero.isDead()) heroIsDead();
     }
 
     private void heroIsDead() {
         message("Злой монстр убил вас :(");
         message("Ваши похороны попали в Книгу Рекордов Гиннесса!!");
-        message("(по числу порванных баянов)");
+        message("(по количеству порванных баянов)");
         end();
     }
 
     private void end() {
-        message("\nХотите начать игру сначала? (y/n)");
-        Scanner scanner = new Scanner(System.in);
-        if (scanner.nextLine().toLowerCase().startsWith("y"))
-            Game.start();
+        message(hero.getName() + ", вы достигли уровня " + hero.getLevel());
+        message("До новых встреч!");
+        endOfGame = true;
     }
 }

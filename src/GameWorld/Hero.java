@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class Hero extends Creature {
     protected int level = 0;
     protected int exp = 0;
+    protected int potions = 0;
 
     Hero(int hitPoints, int strength,
                 int agility, String name, Game game) {
@@ -18,10 +19,10 @@ public class Hero extends Creature {
 
     final void levelUp() {
         level++;
-        game.message("Поздравляем! Вы достигли уровня " +
+        Game.message("Поздравляем! Вы достигли уровня " +
                 level + ".");
-        game.message("Распределите 6 очков между силой и ловкостью.");
-        game.message("Введите через пробел два целых " +
+        Game.message("Распределите 6 очков между силой и ловкостью.");
+        Game.message("Введите через пробел два целых " +
                 "неотрицательных числа с суммой 6:");
 
         Scanner scanner = new Scanner(System.in);
@@ -34,8 +35,8 @@ public class Hero extends Creature {
                 agilityUp(upAgility);
             } else throw new IllegalArgumentException();
         } catch (InputMismatchException | IllegalArgumentException e) {
-            game.message("Мимо пролетела ворона и обкакала вас.");
-            game.message("Поймать ворону не удалось.");
+            Game.message("Мимо пролетела ворона и обкакала вас.");
+            Game.message("Поймать ворону не удалось.");
             strengthUp(2);
             agilityUp(2);
         }
@@ -43,11 +44,11 @@ public class Hero extends Creature {
 
     private void strengthUp(int upStrength) {
         strength += upStrength;
-        game.message("Сила повышена на " + upStrength + ".");
+        Game.message("Сила повышена на " + upStrength + ".");
     }
 
     private void agilityUp(int upAgility) {
         strength += upAgility;
-        game.message("Ловкость повышена на " + upAgility + ".");
+        Game.message("Ловкость повышена на " + upAgility + ".");
     }
 }
