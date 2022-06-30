@@ -37,7 +37,7 @@ public class Game {
     }
 
     private void inMainTown () {
-        message("В вашу честь мы пировали 5 дней подряд!");
+        message(hero.getName() + ", вы в главном городе");
         hero.levelUp();
         hero.levelUp();
         message("Вы отравились вином из одуванчиков.");

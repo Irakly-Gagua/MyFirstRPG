@@ -24,7 +24,8 @@ public class Hero extends Creature {
         game.message("Введите через пробел два целых " +
                 "неотрицательных числа с суммой 6:");
 
-        try (Scanner scanner = new Scanner(System.in)) {
+        Scanner scanner = new Scanner(System.in);
+        try {
             int upStrength = scanner.nextInt();
             int upAgility = scanner.nextInt();
             if (upAgility + upStrength == 6 &&
