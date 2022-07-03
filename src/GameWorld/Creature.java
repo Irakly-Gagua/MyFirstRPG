@@ -4,7 +4,7 @@ import java.lang.*;
 import java.util.Scanner;
 
 public abstract class Creature {
-    protected int hitPoints;
+    protected volatile int hitPoints;
     protected int strength;
     protected int agility;
     private final String name;
@@ -43,11 +43,16 @@ public abstract class Creature {
         return name;
     }
 
-    protected final int hit(Creature creature) {
+    protected final boolean hit(Creature creature) {
         if (creature == null) {
             throw new IllegalArgumentException();
         }
-        return (3 * agility > 100 * Math.random()) ?
-                creature.hitPoints -= strength : 0;
+        if (3 * agility > 100 * Math.random()) {
+            creature.hitPoints -= strength;
+            if (creature.hitPoints < 0)
+                creature.hitPoints = 0;
+            return true;
+        }
+        return false;
     }
 }

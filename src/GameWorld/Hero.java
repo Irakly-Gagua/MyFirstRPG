@@ -6,7 +6,9 @@ import java.util.Scanner;
 public class Hero extends Creature {
     protected int level = 0;
     protected int exp = 0;
-    protected int potions = 0;
+    protected volatile int potions = 0;
+    protected int gold = 0;
+    public final Object lock = new Object();
 
     Hero(int hitPoints, int strength,
                 int agility, String name, Game game) {
@@ -19,11 +21,11 @@ public class Hero extends Creature {
 
     final void levelUp() {
         level++;
-        Game.message("Поздравляем! Вы достигли уровня " +
+        game.message("Поздравляем! Вы достигли уровня " +
                 level + ".");
-        Game.message("Распределите 6 очков между силой и ловкостью.");
-        Game.message("Введите через пробел два целых " +
-                "неотрицательных числа с суммой 6:");
+        game.message("Распределите 6 очков между силой и ловкостью.");
+        game.message("Введите через пробел два целых " +
+                "неотрицательных числа с суммой 6:", true);
 
         Scanner scanner = new Scanner(System.in);
         try {
@@ -35,8 +37,8 @@ public class Hero extends Creature {
                 agilityUp(upAgility);
             } else throw new IllegalArgumentException();
         } catch (InputMismatchException | IllegalArgumentException e) {
-            Game.message("Мимо пролетела ворона и обкакала вас.");
-            Game.message("Поймать ворону не удалось.");
+            game.message("Мимо пролетела ворона и обкакала вас.");
+            game.message("Поймать ворону не удалось.");
             strengthUp(2);
             agilityUp(2);
         }
@@ -44,11 +46,13 @@ public class Hero extends Creature {
 
     private void strengthUp(int upStrength) {
         strength += upStrength;
-        Game.message("Сила повышена на " + upStrength + ".");
+        game.message("Сила повышена на " + upStrength + ". " +
+                "Ваша сила равна " + strength + ".");
     }
 
     private void agilityUp(int upAgility) {
-        strength += upAgility;
-        Game.message("Ловкость повышена на " + upAgility + ".");
+        agility += upAgility;
+        game.message("Ловкость повышена на " + upAgility + ". " +
+                "Ваша ловкость равна " + agility + ".");
     }
 }
