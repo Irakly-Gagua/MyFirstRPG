@@ -31,7 +31,6 @@ public class Game {
             message("Путник, введите имя длиной от 1 до 20 символов.");
             name = scanner.nextLine().trim();
         }
-        scanner.close();
         hero = new Hero(100, 12, 10, name, this);
         message(name + ", вы наш новый герой!");
         message("У вас 100 очков здоровья, сила 12, ловкость 10.");
